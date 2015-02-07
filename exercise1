@@ -1,0 +1,29 @@
+import csv
+
+
+class FileReader(object):
+    def __init__(self, filename):
+        self.FileName = filename
+
+    def number_of_lines(self):
+        count = 0
+        with open(self.FileName, 'r') as csvfile:
+            csvreader = csv.reader(csvfile, delimiter='^')
+            for row in csvreader:
+                count += 1
+
+        return count
+
+
+def main():
+    search_file_name = 'searches.csv'
+    bookings_file_name = 'bookings.csv'
+    search_file = FileReader(search_file_name)
+    bookings_file = FileReader(bookings_file_name)
+
+    print 'Number of lines in ' + search_file_name + ' = ' + str(search_file.number_of_lines())
+    print 'Number of lines in ' + bookings_file_name + ' = ' + str(bookings_file.number_of_lines())
+
+
+if __name__ == "__main__":
+    main()
