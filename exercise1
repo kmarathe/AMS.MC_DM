@@ -1,28 +1,35 @@
 import csv
 
-
-class FileReader(object):
+# This object of class FileReader will represent a CSV file. It supports a method which will
+# count the number of lines in CSV file
+class CSVFileReader(object):
     def __init__(self, filename):
         self.FileName = filename
 
+    # The function will print the number of lines in current file. If file is not found it will display error message.
     def number_of_lines(self):
         count = 0
+        # try block to handle the file not found exception
         try:
             with open(self.FileName, 'r') as csvfile:
                 csvreader = csv.reader(csvfile, delimiter='^')
                 for row in csvreader:
                     count += 1
                 print 'Number of lines in ' + self.FileName + ' = ' + str(count)
-
         except IOError:
+            # print the error message
             print("File not found - " + self.FileName)
 
 
 def main():
+    # path for the search file
     search_file_name = 'searches.csv'
+    # path for the booking file
     bookings_file_name = 'bookings.csv'
-    search_file = FileReader(search_file_name)
-    bookings_file = FileReader(bookings_file_name)
+
+    # objects for search and booking files
+    search_file = CSVFileReader(search_file_name)
+    bookings_file = CSVFileReader(bookings_file_name)
 
     search_file.number_of_lines()
     bookings_file.number_of_lines()
