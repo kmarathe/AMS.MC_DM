@@ -7,12 +7,15 @@ class FileReader(object):
 
     def number_of_lines(self):
         count = 0
-        with open(self.FileName, 'r') as csvfile:
-            csvreader = csv.reader(csvfile, delimiter='^')
-            for row in csvreader:
-                count += 1
+        try:
+            with open(self.FileName, 'r') as csvfile:
+                csvreader = csv.reader(csvfile, delimiter='^')
+                for row in csvreader:
+                    count += 1
+                print 'Number of lines in ' + self.FileName + ' = ' + str(count)
 
-        return count
+        except IOError:
+            print("File not found - " + self.FileName)
 
 
 def main():
@@ -21,8 +24,8 @@ def main():
     search_file = FileReader(search_file_name)
     bookings_file = FileReader(bookings_file_name)
 
-    print 'Number of lines in ' + search_file_name + ' = ' + str(search_file.number_of_lines())
-    print 'Number of lines in ' + bookings_file_name + ' = ' + str(bookings_file.number_of_lines())
+    search_file.number_of_lines()
+    bookings_file.number_of_lines()
 
 
 if __name__ == "__main__":
