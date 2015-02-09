@@ -1,5 +1,6 @@
 import csv
 import datetime as date
+import matplotlib.pyplot as plt
 
 
 class SearchesFile(object):
@@ -72,19 +73,41 @@ class SearchesFile(object):
     # This function will plot the graph of searches against the month
     @staticmethod
     def plot_graph(search_dict):
-        return
-        #
-        # TO DO
-        #
+        # This for loop will iterate over all the cities present in the dictionary
+        for city, years_dict in search_dict.iteritems():
+            # create an empty x-value and y-value list for the city
+            x_values = []
+            y_values = []
+
+            # this loop will iterate over all search years present in the dictionary
+            for search_year, search_values in years_dict.iteritems():
+                # add the object for month of that year and its corresponding search value
+                for i in range(1, 13, 1):
+                    x_values.append(date.datetime(year=search_year, month=i, day=1))
+                    y_values.append(search_values[i - 1])
+
+            plt.plot(x_values, y_values, marker='o', label=city)
+
+        plt.title('Exercise 3')
+        plt.xlabel('Month')
+        plt.ylabel('No. of Searches')
+        plt.legend(loc='best', title='Searches')
+        plt.show()
 
 
 def main():
     searches_file_name = 'searches.csv'
-    list_cities = ['AGP', 'MAD', 'BCN']
+    list_cities = ['AGP', 'MAD', 'BCN', 'JFK']
     destination_column = 'Destination'
     date_column = 'Date'
     search_file = SearchesFile(searches_file_name)
     search_file.generate_graph(list_cities, destination_column, date_column)
 
+    #search_dict = {'BCN': {2013: [29469, 28329, 30552, 31236, 28728, 26505, 29241, 27075, 23427, 20276, 19824, 15400],
+    #                       2014: [29469, 28329, 30552, 31236, 28728, 26505, 29241, 27075, 23427, 20276, 19824, 15400]},
+    #               'MAD': {2014: [24258, 22800, 24681, 25251, 26334, 22800, 22971, 21831, 21147, 22294, 20272, 14504],
+    #                       2013: [258, 220, 241, 251, 263, 220, 271, 231, 217, 224, 272, 104]},
+    #               'AGP': {2011: [9633, 8379, 10659, 8265, 10830, 7923, 8892, 7866, 8151, 6499, 6384, 3696]}}
+    #search_file.plot_graph(search_dict)
 if __name__ == "__main__":
     main()
