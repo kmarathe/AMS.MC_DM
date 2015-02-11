@@ -2,6 +2,8 @@ import csv
 
 # This object of class FileReader will represent a CSV file. It supports a method which will
 # count the number of lines in CSV file
+
+
 class CSVFileReader(object):
     def __init__(self, filename):
         self.FileName = filename
@@ -13,6 +15,7 @@ class CSVFileReader(object):
         try:
             with open(self.FileName, 'r') as csvfile:
                 csvreader = csv.reader(csvfile, delimiter='^')
+                # Iterate over the lines and increase the count by one
                 for row in csvreader:
                     count += 1
                 print 'Number of lines in ' + self.FileName + ' = ' + str(count)

@@ -35,6 +35,10 @@ class BookingsFile(object):
     # it will return -1
     @staticmethod
     def get_column_index(first_row, column_name):
+        # Trim the column headers
+        for i in range(0, len(first_row)):
+            first_row[i] = first_row[i].strip()
+
         if column_name not in first_row:
             print 'Column ' + column_name + ' does not exist in the file'
             return -1
@@ -69,8 +73,8 @@ class BookingsFile(object):
         for row in csv_reader:
             # check if all the columns are present in booking entry and year of booking is 'year_value'
             if len(row) == number_of_fields and row[year_index] == year_value:
-                airport = row[airport_index]
-                passengers = int(row[passenger_index])
+                airport = row[airport_index].strip()
+                passengers = int(row[passenger_index].strip())
                 if airport in airport_dict:
                     airport_dict[airport] += passengers
                 else:

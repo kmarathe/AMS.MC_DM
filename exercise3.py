@@ -14,16 +14,20 @@ class SearchesFile(object):
             with open(self.FileName, 'r') as csv_file:
                 csv_reader = csv.reader(csv_file, delimiter='^')
                 first_row = next(csv_reader)
+
+                # Get the total number of fields, destination index, date index from first row
                 number_of_fields = len(first_row)
                 destination_index = self.get_column_index(first_row, destination_column)
                 date_index = self.get_column_index(first_row, date_column)
 
+                # If desired columns are not present then exit
                 if destination_index == -1 or date_index == -1:
                     return
 
+                # create the search dictionary
                 search_dict = self.get_search_history(csv_reader, list_cities, destination_index,
                                                       date_index, number_of_fields)
-                print search_dict
+                # print search_dict
                 self.plot_graph(search_dict)
 
         except IOError:
@@ -35,14 +39,19 @@ class SearchesFile(object):
 
     def get_search_history(self, csv_reader, list_cities, destination_index, date_index, number_of_fields):
         search_dict = {}
+        # Add the cities to the dictionary with value as empty dictionary
         for city in list_cities:
             search_dict[city] = {}
 
+        # parse the file row by row
         for row in csv_reader:
+            # current will will be taken into consideration only if it has all the fields
             if len(row) == number_of_fields:
-                destination = row[destination_index]
+                destination = row[destination_index].strip()
+                # Check if the destination is in the list of desired cities
                 if destination in list_cities:
-                    current_date = date.datetime.strptime(row[date_index], '%Y-%m-%d').date()
+                    # create a datetime object of the current date, which will be used to get the year and month
+                    current_date = date.datetime.strptime(row[date_index].strip(), '%Y-%m-%d').date()
                     search_dict[destination] = self.modify_dict(search_dict[destination], current_date)
 
         return search_dict
@@ -54,9 +63,11 @@ class SearchesFile(object):
         current_month = current_date.month
         current_year = current_date.year
 
+        # Check if the current year is present in dictionary or not
         if current_year not in year_dict:
             year_dict[current_year] = [0] * 12
 
+        # Increase the count for the month
         year_dict[current_year][current_month - 1] += 1
         return year_dict
 
@@ -64,6 +75,10 @@ class SearchesFile(object):
     # it will return -1
     @staticmethod
     def get_column_index(first_row, column_name):
+        # Trim the column headers
+        for i in range(0, len(first_row)):
+            first_row[i] = first_row[i].strip()
+
         if column_name not in first_row:
             print 'Column ' + column_name + ' does not exist in the file'
             return -1
@@ -97,17 +112,11 @@ class SearchesFile(object):
 
 def main():
     searches_file_name = 'searches.csv'
-    list_cities = ['AGP', 'MAD', 'BCN', 'JFK']
+    list_cities = ['AGP', 'MAD', 'BCN']
     destination_column = 'Destination'
     date_column = 'Date'
     search_file = SearchesFile(searches_file_name)
     search_file.generate_graph(list_cities, destination_column, date_column)
 
-    #search_dict = {'BCN': {2013: [29469, 28329, 30552, 31236, 28728, 26505, 29241, 27075, 23427, 20276, 19824, 15400],
-    #                       2014: [29469, 28329, 30552, 31236, 28728, 26505, 29241, 27075, 23427, 20276, 19824, 15400]},
-    #               'MAD': {2014: [24258, 22800, 24681, 25251, 26334, 22800, 22971, 21831, 21147, 22294, 20272, 14504],
-    #                       2013: [258, 220, 241, 251, 263, 220, 271, 231, 217, 224, 272, 104]},
-    #               'AGP': {2011: [9633, 8379, 10659, 8265, 10830, 7923, 8892, 7866, 8151, 6499, 6384, 3696]}}
-    #search_file.plot_graph(search_dict)
 if __name__ == "__main__":
     main()
