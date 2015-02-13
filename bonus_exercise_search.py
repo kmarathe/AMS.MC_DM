@@ -80,24 +80,27 @@ class SearchDetails(object):
     # a booking from 'origin' to 'destination' on 'date'
     @staticmethod
     def check_if_booking_exists(booking_dict, date, origin, destination):
+        found = '1'
+        not_found = '0'
+
         # if date is not present in booking dictionary, return 0
         if date not in booking_dict:
-            return '0'
+            return not_found
         # get the origin dictionary corresponding to the date
         origin_dict = booking_dict[date]
 
         # if origin is not in origin dictionary, return 0
         if origin not in origin_dict:
-            return '0'
+            return not_found
         # get the list of destinations from the origin
         destination_list = origin_dict[origin]
 
         # if destination is not in the list, return 0
         if destination not in destination_list:
-            return '0'
+            return not_found
 
         # destination is present in the list, return 1
-        return '1'
+        return found
 
     # get_column_index: This function will return the index of column_name from the first_row.
     # If column does not exist in the first_row it will return -1
